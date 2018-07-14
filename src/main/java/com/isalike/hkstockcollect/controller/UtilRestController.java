@@ -13,4 +13,17 @@ public class UtilRestController {
     public String test(@RequestParam(value = "index", required = true) String index){
         return utilService.test(index);
     }
+/*
+    @RequestMapping(value="/testing")
+    public String testing(){
+        return "<3 u";
+    }
+*/
+    @RequestMapping(value="/test2")
+    public String test2(@RequestParam(value = "index", required = true) String index,
+                        @RequestParam(value = "startDt", required = true) String startDt,
+                        @RequestParam(value = "endDt", required = true) String endDt) throws Exception{
+        //return "";
+        return utilService.test2(index,startDt,endDt);
+    }
 }
