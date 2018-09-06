@@ -2,6 +2,7 @@ package com.isalike.hkstockcollect.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isalike.hkstockcollect.constant.Stock;
 import com.isalike.hkstockcollect.dao.MariaDbMasterFactory;
 import com.isalike.hkstockcollect.dao.StockDAO;
 import org.jsoup.Jsoup;
@@ -40,7 +41,7 @@ public class UtilService {
         }
     }
 
-    public String test2(String index,String startDt,String endDt) throws Exception{
+    public String getData(String index,String startDt,String endDt) throws Exception{
         while(index.length()<5){
             index = 0 + index;
         }
@@ -49,10 +50,10 @@ public class UtilService {
         String temp = a.childNode(0).toString().replace("\n","").replace("{  \"dataset\": ","");
         HashMap<String,Object> result =
                 new ObjectMapper().readValue(temp.substring(0,temp.length()-1), HashMap.class);
-        return testString(index,result.get("data").toString());
+        return insertData(index,result.get("data").toString());
     }
 
-    public String testString(String symbol,String data){
+    public String insertData(String symbol,String data){
         String[] result = data.substring(1,data.length()-1).split("],");
         ArrayList<ArrayList<String>> aList = new ArrayList<ArrayList<String>>();
         for(int i = 0;i < result.length ; i++){
@@ -60,8 +61,8 @@ public class UtilService {
         }
         for(int i = 0 ; i < aList.size() ; i++){
             try{
-                String sql = "INSERT INTO daily_record(symbol,recordDt,closeValue,lastValue,dayHighValue,dayLowValue) VALUES (symbol,aList.get(i).get(0),aList.get(i).get(1),aList.get(i).get(9)," +
-                        "aList.get(i).get(7),aList.get(i).get(8)) ;";
+                String sql = "INSERT INTO daily_record(symbol,recordDt,closeValue,lastValue,dayHighValue,dayLowValue) VALUES ("+symbol+",'"+aList.get(i).get(0)+"',"+aList.get(i).get(1)+","+aList.get(i).get(9)+"," +
+                        aList.get(i).get(7)+","+aList.get(i).get(8) +");";
                 jdbcTemplate.execute(sql);
             }catch (Exception e){
             }

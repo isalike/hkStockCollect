@@ -1,10 +1,14 @@
 package com.isalike.hkstockcollect.controller;
 
+import com.isalike.hkstockcollect.constant.Stock;
 import com.isalike.hkstockcollect.services.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
 @RestController
 public class UtilRestController {
     @Autowired
@@ -23,11 +27,15 @@ public class UtilRestController {
     public String testStr(){
         return utilService.testString();
     }*/
-    @RequestMapping(value="/test2")
-    public String test2(@RequestParam(value = "index", required = true) String index,
+    @RequestMapping(value="/initHsiDb")
+    public String initHsiDb(@RequestParam(value = "index", required = true) String index,
                         @RequestParam(value = "startDt", required = true) String startDt,
                         @RequestParam(value = "endDt", required = true) String endDt) throws Exception{
         //return "";
-        return utilService.test2(index,startDt,endDt);
+        for (Map.Entry<String, String> entry : Stock.hsiStock.entrySet()) {
+            utilService.getData(entry.getKey(),startDt,endDt);
+//            System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+        }
+        return "ok";
     }
 }
